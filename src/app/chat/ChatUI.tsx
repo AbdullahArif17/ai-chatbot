@@ -17,12 +17,18 @@ export default function AgentInterface() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
   const [agent, setAgent] = useState<ReturnType<typeof createAgent> | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const [darkMode, setDarkMode] = useState(false)
 
   // Initialize agent with persistent conversation
   useEffect(() => {
-    const newAgent = createAgent("AIzaSyBEmX7lHyc93FwqPFVmCRrXYWQ9GO2Tc9E")
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY
+    if (!apiKey) {
+      setError("Missing Gemini API key. Please set NEXT_PUBLIC_GEMINI_API_KEY in your environment variables.")
+      return
+    }
+    const newAgent = createAgent(apiKey)
     // Load saved messages from localStorage
     const savedMessages = localStorage.getItem("agent-messages")
     const initialMessages = savedMessages ? JSON.parse(savedMessages) : []
@@ -186,7 +192,27 @@ export default function AgentInterface() {
 
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {messages.length === 0 && (
+        {error && (
+          <div className="flex justify-center">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-md">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">Configuration Error</h3>
+                  <div className="mt-2 text-sm text-red-700">
+                    <p>{error}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {messages.length === 0 && !error && (
           <div className="flex flex-col items-center justify-center h-full text-center animate-fade-in">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
               <SparklesIcon className="w-8 h-8 text-white" />
@@ -298,8 +324,8 @@ export default function AgentInterface() {
                   ? "border border-slate-600 bg-slate-700/90 text-slate-100 placeholder-slate-400"
                   : "border border-slate-300 bg-white/90 text-slate-800 placeholder-slate-400"
               }`}
-              placeholder="Type your message here..."
-              disabled={loading}
+              placeholder={error ? "API key not configured" : "Type your message here..."}
+              disabled={loading || !!error}
             />
             <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
@@ -307,7 +333,7 @@ export default function AgentInterface() {
           </div>
           <button
             type="submit"
-            disabled={loading || !input.trim()}
+            disabled={loading || !input.trim() || !!error}
             className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 active:scale-95 group"
           >
             <PaperAirplaneIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />

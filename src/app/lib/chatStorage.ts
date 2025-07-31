@@ -1,8 +1,9 @@
 const CHAT_HISTORY_KEY = 'gemini-chat-history';
 
 export type Message = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'model' | 'system';
   content: string;
+  timestamp?: number;
 };
 
 export const getChatHistory = (): Message[] => {

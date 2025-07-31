@@ -1,4 +1,4 @@
-# AI Chatbot - Gemini Powered
+# AI Chatbot 
 
 A modern, intelligent chatbot built with Next.js 15, TypeScript, and Google's Gemini AI. Features a beautiful UI with dark mode support, conversation persistence, and real-time chat capabilities.
 
