@@ -1,5 +1,5 @@
 type AgentState = {
-  memory: Record<string, any>;
+  memory: Record<string, unknown>;
   conversationHistory: Message[];
   currentTask?: string;
   personality?: string;
@@ -165,11 +165,11 @@ class GeminiAgent {
     });
   }
 
-  public remember(key: string, value: any): void {
+  public remember(key: string, value: unknown): void {
     this.state.memory[key] = value;
   }
 
-  public recall(key: string): any {
+  public recall(key: string): unknown {
     return this.state.memory[key];
   }
 
@@ -214,7 +214,7 @@ class GeminiAgent {
     return [...this.state.conversationHistory];
   }
 
-  public getMemorySnapshot(): Record<string, any> {
+  public getMemorySnapshot(): Record<string, unknown> {
     return { ...this.state.memory };
   }
 

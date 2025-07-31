@@ -225,7 +225,7 @@ export default function AgentInterface() {
               Welcome to your AI Assistant
             </h2>
             <p className={`max-w-md transition-colors duration-300 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
-              Start a conversation by typing a message below. I'm here to help with any questions you might have!
+              Start a conversation by typing a message below. I&apos;m here to help with any questions you might have!
             </p>
           </div>
         )}
