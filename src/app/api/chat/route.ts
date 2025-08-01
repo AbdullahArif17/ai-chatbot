@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import { Message } from '@/app/lib/chatStorage';
 
-export const generateGeminiResponse = async (messages: Message[]): Promise<string> => {
+const generateGeminiResponse = async (messages: Message[]): Promise<string> => {
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
   const baseUrl = process.env.NEXT_PUBLIC_GEMINI_BASE_URL;
   const modelName = process.env.NEXT_PUBLIC_GEMINI_MODEL_NAME;
